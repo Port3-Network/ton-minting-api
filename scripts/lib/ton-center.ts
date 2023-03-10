@@ -16,7 +16,8 @@ export class TonCenter {
     keyPair: KeyPair;
     constructor() {
         this.ton = this.getClient();
-        this.uri = 'https://testnet.tonscan.org/address';
+        console.log(process.env.TON_SCAN_ENDPOINT)
+        this.uri = process.env.TON_SCAN_ENDPOINT ? process.env.TON_SCAN_ENDPOINT : 'https://testnet.tonscan.org/address';
         this.workchain = 0;
     }
 
