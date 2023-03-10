@@ -2,8 +2,7 @@ import * as dotenv from 'dotenv';
 dotenv.config({ path: '.env' });
 
 import * as fs from 'fs';
-import { Builder, Cell, contractAddress } from 'ton';
-import { OpenedContract, WalletContractV3R2 } from 'ton';
+import { OpenedContract, Builder, Cell, contractAddress, WalletContractV4 } from 'ton';
 import { KeyPair, mnemonicToWalletKey } from 'ton-crypto';
 import { TonClient, TonClientParameters } from 'ton/dist/client/TonClient';
 import BasicContract from './base-contract';
@@ -13,7 +12,7 @@ export class TonCenter {
     workchain: number;
 
     ton: TonClient;
-    wallet: WalletContractV3R2;
+    wallet: WalletContractV4;
     keyPair: KeyPair;
     constructor() {
         this.ton = this.getClient();
@@ -36,7 +35,7 @@ export class TonCenter {
     }
 
     // Waiting for transaction to be packaged
-    async awaitTransaction(contract: OpenedContract<WalletContractV3R2>, seqno: number) {
+    async awaitTransaction(contract: OpenedContract<WalletContractV4>, seqno: number) {
         console.log('waiting for deploy transaction to confirm...');
         let currentSeqno = seqno;
         while (currentSeqno == seqno) {
@@ -54,7 +53,7 @@ export class TonCenter {
         }
 
         this.keyPair = await mnemonicToWalletKey(mnemonic);
-        this.wallet = WalletContractV3R2.create({ publicKey: this.keyPair.publicKey, workchain: 0 });
+        this.wallet = WalletContractV4.create({ publicKey: this.keyPair.publicKey, workchain: 0 });
 
         // check the wallet is Active
         const isDeployed = await this.ton.isContractDeployed(this.wallet.address);
